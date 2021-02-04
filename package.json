@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "start": "webpack serve --env development",
-        "build": "webpack",
+        "build": "webpack --env production",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "browserslist": {
@@ -58,6 +58,7 @@
         "core-js": "^3.8.3",
         "leaflet": "^1.7.1",
         "ol": "^6.5.0",
+        "process": "^0.11.10",
         "react": "^17.0.1",
         "react-dom": "^17.0.1",
         "react-leaflet": "^3.1.0",

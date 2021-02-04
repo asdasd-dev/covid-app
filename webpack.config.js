@@ -54,6 +54,9 @@ module.exports = (env) => {
                     test: /\.(js|ts)x?$/,
                     exclude: /node_modules/,
                     loader: "babel-loader",
+                    options: {
+                        envName: isProd ? "production" : "development",
+                    },
                 },
 
                 //Loading images
@@ -103,7 +106,7 @@ module.exports = (env) => {
         devServer: {
             open: true,
             historyApiFallback: true,
-            port: 3000
+            port: 3000,
         },
 
         target: isDev ? "web" : "browserslist",

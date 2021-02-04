@@ -1,1 +1,1 @@
-## Custom boilerplate for React app
+## Another one COVID-19 statistics app

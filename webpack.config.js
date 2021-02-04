@@ -58,7 +58,7 @@ module.exports = (env) => {
 
                 //Loading images
                 {
-                    test: /\.(png|jpg|jpeg|gif|ico)$/,
+                    test: /\.(png|jpg|jpeg|gif|ico|svg)$/,
                     use: [
                         {
                             loader: "file-loader",
@@ -103,8 +103,10 @@ module.exports = (env) => {
         devServer: {
             open: true,
             historyApiFallback: true,
-            port: 3000,
+            port: 3000
         },
+
+        target: isDev ? "web" : "browserslist",
 
         devtool: isProd ? "hidden-source-map" : "eval",
     };

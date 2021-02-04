@@ -8,9 +8,10 @@
         "allowJs": false,
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
+        "types": ["node"],
         "typeRoots": ["node-modules/@types"],
         "moduleResolution": "node"
     },
-    "include": ["src/**/*"],
+    "include": ["src/**/*", "index.d.ts"],
     "exclude": ["**/node_modules", "**/dist", "**/build"]
 }

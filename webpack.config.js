@@ -7,10 +7,7 @@ module.exports = (env) => {
     const isDev = !!env.development;
 
     const getStyleLoaders = () => {
-        return [
-            isProd ? MiniCssExtractPlugin.loader : "style-loader",
-            "css-loader",
-        ];
+        return [isProd ? MiniCssExtractPlugin.loader : "style-loader", "css-loader"];
     };
 
     const getPlugins = () => {
@@ -56,6 +53,7 @@ module.exports = (env) => {
                     loader: "babel-loader",
                     options: {
                         envName: isProd ? "production" : "development",
+                        retainLines: true,
                     },
                 },
 

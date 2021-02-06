@@ -3,26 +3,24 @@ import ReactDOM from "react-dom";
 import { useMap } from "react-leaflet";
 import L from "leaflet";
 import { Card, Icon } from "semantic-ui-react";
-import { casesBounds, getColor } from "./CovidMap";
+import { oneCasePerPeopleBounds, getColor } from "./CovidMap";
 
 export const CasesInfo: React.FC = () => {
     const map = useMap();
     useEffect(() => {
         const legend = new L.Control({ position: "bottomright" });
-        legend.onAdd = function (map) {
+        legend.onAdd = () => {
             const div = L.DomUtil.create("div", "");
             const jsx = (
                 <Card fluid>
                     <Card.Content textAlign="left">
+                        <Card.Header>One case per {"{n}"} people</Card.Header>
                         <Card.Description>
-                            {casesBounds &&
-                                casesBounds.map((bound) => (
+                            {oneCasePerPeopleBounds &&
+                                oneCasePerPeopleBounds.map((bound) => (
                                     <div key={bound}>
-                                        <Icon
-                                            name="circle"
-                                            style={{ color: getColor(bound) }}
-                                        />
-                                        {">"}
+                                        <Icon name="circle" style={{ color: getColor(bound) }} />
+                                        {"<"}
                                         {bound}
                                     </div>
                                 ))}

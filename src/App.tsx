@@ -1,93 +1,149 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import "semantic-ui-css/semantic.min.css";
-import { Card, Container, Grid, Header } from "semantic-ui-react";
+import { Button, Card, Container, Grid, Header, Icon, Label } from "semantic-ui-react";
 import { StatsContext } from "./context/StatsContext";
 import { CovidMap } from "./components/CovidMap";
+import styled, { ThemeContext } from "styled-components";
+import moment from "moment";
+import { CountryCharts } from "./components/CountryCharts";
+import { useMediaQuery } from "react-responsive";
+
+const Stat = styled.p`
+    font-size: 2rem;
+    font-weight: bold;
+    line-height: 0.5;
+    margin: 30px 0 !important;
+
+    sub::before {
+        content: " +";
+    }
+
+    sub {
+        color: grey;
+        font-weight: normal;
+    }
+`;
 
 export const App = () => {
-    const stats = useContext(StatsContext);
+    const {
+        state: { selectedCountry, worldStats },
+        dispatch,
+    } = useContext(StatsContext);
 
-    const [selectedCountry, setSelectedCountry] = useState<GeoJSON.Feature>(
-        null
-    );
+    const isMobile = useMediaQuery({ maxWidth: 767 });
 
-    let countryInfo;
+    const theme = useContext(ThemeContext);
 
-    if (stats && selectedCountry) {
-        countryInfo = stats.find(
-            (data) => data.countryInfo.iso3 === selectedCountry.id
-        );
+    const [isWorldTotal, setIsWorldTotal] = useState(true);
+    useEffect(() => {
+        selectedCountry && setIsWorldTotal(false);
+    }, [selectedCountry]);
+
+    const dataSourse = isWorldTotal ? worldStats : selectedCountry;
+
+    function handleWorldTotalClick() {
+        setIsWorldTotal(true);
+        dispatch({ type: "SET_SELECTED_COUNTRY", payload: null });
     }
 
     return (
-        <Container textAlign="center">
+        <Container>
             <Grid>
-                <Grid.Row>
-                    <Header as="h1" style={{ margin: 30 }}>
-                        COVID-19 Map
-                    </Header>
+                <Grid.Row columns={2} verticalAlign="middle">
+                    <Grid.Column>
+                        <Header as="h1" style={{ margin: 30 }}>
+                            COVID{"\u2011"}19{"\u00A0"}Map{" "}
+                            <span
+                                style={{
+                                    color: theme.secondaryColor,
+                                    fontSize: "small",
+                                    fontWeight: "normal",
+                                    whiteSpace: "nowrap",
+                                }}
+                            >
+                                Last updated: {worldStats && moment(worldStats.updated).format("MMMM Do YYYY, h:mm a")}
+                            </span>
+                        </Header>
+                    </Grid.Column>
+                    <Grid.Column textAlign="right">
+                        {isWorldTotal || (
+                            <Button size="large" onClick={handleWorldTotalClick}>
+                                World total
+                            </Button>
+                        )}
+                    </Grid.Column>
                 </Grid.Row>
                 <Grid.Row style={{ minHeight: 500 }}>
-                    <CovidMap
-                        onSelectCountry={setSelectedCountry}
-                        selectedCountry={
-                            selectedCountry && selectedCountry.id.toString()
-                        }
-                    />
+                    <CovidMap />
                 </Grid.Row>
-                {!selectedCountry ? (
+                {!dataSourse ? (
                     <Grid.Row centered>
                         <Header>Select any country</Header>
                     </Grid.Row>
                 ) : (
                     <>
                         <Grid.Row centered>
-                            <Header as="h2">
-                                {selectedCountry &&
-                                    selectedCountry.properties.name}
-                            </Header>
+                            <Header>{isWorldTotal ? "World total" : selectedCountry.country}</Header>
                         </Grid.Row>
-                        <Grid.Row columns={3}>
+                        <Grid.Row columns={isMobile ? 1 : 3} textAlign="center">
                             <Grid.Column>
                                 <Card fluid>
                                     <Card.Content>
-                                        <Card.Header as="h1">Cases</Card.Header>
-                                        <Card.Content>
-                                            {countryInfo && countryInfo.cases}
-                                        </Card.Content>
+                                        <Stat style={{ color: theme.casesColor }}>
+                                            {dataSourse.cases}
+                                            <sub>{dataSourse.todayCases || 0}</sub>
+                                        </Stat>
+                                        <Header size="large" color="grey">
+                                            Cases
+                                        </Header>
                                     </Card.Content>
                                 </Card>
                             </Grid.Column>
                             <Grid.Column>
                                 <Card fluid>
                                     <Card.Content>
-                                        <Card.Header as="h1">
+                                        <Stat style={{ color: theme.recoveredColor }}>
+                                            {dataSourse.recovered}
+                                            <sub>{dataSourse.todayRecovered || 0}</sub>
+                                        </Stat>
+                                        <Header size="large" color="grey">
                                             Recovered
-                                        </Card.Header>
-                                        <Card.Content>
-                                            {countryInfo &&
-                                                countryInfo.recovered}
-                                        </Card.Content>
+                                        </Header>
                                     </Card.Content>
                                 </Card>
                             </Grid.Column>
                             <Grid.Column>
                                 <Card fluid>
                                     <Card.Content>
-                                        <Card.Header as="h1">
+                                        <Stat style={{ color: theme.deathsColor }}>
+                                            {dataSourse.deaths}
+                                            <sub>{dataSourse.todayDeaths || 0}</sub>
+                                        </Stat>
+                                        <Header size="large" color="grey">
                                             Deaths
-                                        </Card.Header>
-                                        <Card.Content>
-                                            {countryInfo && countryInfo.deaths}
-                                        </Card.Content>
+                                        </Header>
                                     </Card.Content>
                                 </Card>
                             </Grid.Column>
                         </Grid.Row>
+                        <Grid.Row centered style={{ marginTop: "40px" }}>
+                            <Header textAlign="center">Daily increase charts</Header>
+                        </Grid.Row>
+                        <CountryCharts country={isWorldTotal ? null : dataSourse.countryIso3.toString()} />
                     </>
                 )}
             </Grid>
+            <div className="ui vertical footer segment" style={{ marginTop: 100 }}>
+                <Button as="a" labelPosition="left" href="https://github.com/asdasd-dev/covid-app">
+                    <Label as="a" basic pointing="right">
+                        <Icon size="big" name="github" style={{ margin: 0 }} />
+                    </Label>
+                    <Button icon color={theme.secondaryColor}>
+                        asdasd-dev
+                    </Button>
+                </Button>
+            </div>
         </Container>
     );
 };

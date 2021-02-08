@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { useMap } from "react-leaflet";
 import L from "leaflet";
 import { Card } from "semantic-ui-react";
-import { CountryData } from "../context/StatsContext";
+import { CountryData } from "../context/CountryStats";
 
 export const CountryInfo: React.FC<{ country: CountryData }> = ({ country }) => {
     const map = useMap();

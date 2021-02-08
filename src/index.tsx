@@ -4,7 +4,9 @@ import ReactDOM from "react-dom";
 import React from "react";
 import { App } from "./App";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
-import { StatsProvider } from "./context/StatsContext";
+import { CountryStatsProvider } from "./context/CountryStats";
+import { WorldStatsProvider } from "./context/WorldStats";
+import { SelectedCountryProvider } from "./context/SelectedCountry";
 
 const theme = {
     recoveredColor: "#8ACA2B",
@@ -34,10 +36,14 @@ const GlobalStyles = createGlobalStyle`
 
 ReactDOM.render(
     <ThemeProvider theme={theme}>
-        <StatsProvider>
-            <App />
-            <GlobalStyles />
-        </StatsProvider>
+        <CountryStatsProvider>
+            <WorldStatsProvider>
+                <SelectedCountryProvider>
+                    <App />
+                </SelectedCountryProvider>
+            </WorldStatsProvider>
+        </CountryStatsProvider>
+        <GlobalStyles />
     </ThemeProvider>,
     document.getElementById("root")
 );

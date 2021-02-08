@@ -4,9 +4,11 @@ import { Bar } from "react-chartjs-2";
 import { useMediaQuery } from "react-responsive";
 import { Grid, Loader } from "semantic-ui-react";
 import { ThemeContext } from "styled-components";
+import { SelectedCountryContext } from "../context/SelectedCountry";
 
-export const CountryCharts: React.FC<{ country: string }> = ({ country }) => {
+export const CountryCharts: React.FC = () => {
     const theme = useContext(ThemeContext);
+    const { selectedCountry } = useContext(SelectedCountryContext);
 
     const isMobile = useMediaQuery({ maxWidth: 767 });
     const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 991 });
@@ -15,13 +17,17 @@ export const CountryCharts: React.FC<{ country: string }> = ({ country }) => {
     useEffect(() => {
         let didCancel = false;
         axios
-            .get(`https://disease.sh/v3/covid-19/historical/${country || "all"}?lastdays=all`)
-            .then((result) => !didCancel && setData(country ? result.data.timeline : result.data));
+            .get(
+                `https://disease.sh/v3/covid-19/historical/${
+                    (selectedCountry && selectedCountry.countryIso3) || "all"
+                }?lastdays=all`
+            )
+            .then((result) => !didCancel && setData(selectedCountry ? result.data.timeline : result.data));
         return () => {
             didCancel = true;
             setData(null);
         };
-    }, [country]);
+    }, [selectedCountry]);
 
     if (!data) {
         return (

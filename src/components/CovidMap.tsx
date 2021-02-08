@@ -3,7 +3,8 @@ import { LeafletMouseEvent } from "leaflet";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
 import { Loader } from "semantic-ui-react";
-import { StatsContext } from "../context/StatsContext";
+import { CountryStatsContext } from "../context/CountryStats";
+import { SelectedCountryContext } from "../context/SelectedCountry";
 import { CasesInfo } from "./CasesInfo";
 import { CountryInfo } from "./CountryInfo";
 
@@ -20,10 +21,9 @@ export function getColor(oneCasePerPeople: number) {
 }
 
 export const CovidMap: React.FC = () => {
-    const {
-        state: { stats, selectedCountry },
-        dispatch,
-    } = useContext(StatsContext);
+    const countryStats = useContext(CountryStatsContext);
+    const { selectedCountry, setSelectedCountry } = useContext(SelectedCountryContext);
+
     const geoJSONRef = useRef(null);
 
     const [countriesData, setCountriesData] = useState<GeoJSON.FeatureCollection>(null);
@@ -36,9 +36,9 @@ export const CovidMap: React.FC = () => {
     const [hoveredCountry, setHoveredCountry] = useState(null);
     useEffect(() => {
         geoJSONRef.current && geoJSONRef.current.setStyle(style);
-    }, [hoveredCountry, selectedCountry, stats]);
+    }, [hoveredCountry, selectedCountry, countryStats]);
 
-    if (!countriesData || !stats) {
+    if (!countriesData || !countryStats) {
         return (
             <Loader size="massive" active>
                 Loading map
@@ -47,10 +47,10 @@ export const CovidMap: React.FC = () => {
     }
 
     function style(feature: any) {
-        if (!stats) {
+        if (!countryStats) {
             return;
         }
-        const data = stats.find((country) => country.countryIso3 === feature.id);
+        const data = countryStats.find((country) => country.countryIso3 === feature.id);
         if (selectedCountry && feature.id === selectedCountry.countryIso3) {
             return {
                 weight: 5,
@@ -73,7 +73,8 @@ export const CovidMap: React.FC = () => {
 
     const geoJsonEventHandlers = {
         click: (e: LeafletMouseEvent) => {
-            dispatch({ type: "SET_SELECTED_COUNTRY", payload: e.sourceTarget.feature.id });
+            console.log(e.sourceTarget.feature.id)
+            setSelectedCountry(countryStats.find((country) => country.countryIso3 === e.sourceTarget.feature.id));
             e.sourceTarget.bringToFront();
         },
         mouseover: (e: LeafletMouseEvent) => {
@@ -99,7 +100,7 @@ export const CovidMap: React.FC = () => {
             <CountryInfo
                 country={
                     hoveredCountry
-                        ? stats.find((country) => country.countryIso3 === hoveredCountry)
+                        ? countryStats.find((country) => country.countryIso3 === hoveredCountry)
                         : selectedCountry || null
                 }
             />

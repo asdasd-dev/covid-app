@@ -2,12 +2,13 @@ import React, { useContext, useEffect, useState } from "react";
 
 import "semantic-ui-css/semantic.min.css";
 import { Button, Card, Container, Grid, Header, Icon, Label } from "semantic-ui-react";
-import { StatsContext } from "./context/StatsContext";
 import { CovidMap } from "./components/CovidMap";
 import styled, { ThemeContext } from "styled-components";
 import moment from "moment";
 import { CountryCharts } from "./components/CountryCharts";
 import { useMediaQuery } from "react-responsive";
+import { SelectedCountryContext } from "./context/SelectedCountry";
+import { WorldStatsContext } from "./context/WorldStats";
 
 const Stat = styled.p`
     font-size: 2rem;
@@ -26,14 +27,11 @@ const Stat = styled.p`
 `;
 
 export const App = () => {
-    const {
-        state: { selectedCountry, worldStats },
-        dispatch,
-    } = useContext(StatsContext);
+    const theme = useContext(ThemeContext);
+    const worldStats = useContext(WorldStatsContext);
+    const { selectedCountry, setSelectedCountry } = useContext(SelectedCountryContext);
 
     const isMobile = useMediaQuery({ maxWidth: 767 });
-
-    const theme = useContext(ThemeContext);
 
     const [isWorldTotal, setIsWorldTotal] = useState(true);
     useEffect(() => {
@@ -44,7 +42,7 @@ export const App = () => {
 
     function handleWorldTotalClick() {
         setIsWorldTotal(true);
-        dispatch({ type: "SET_SELECTED_COUNTRY", payload: null });
+        setSelectedCountry(null);
     }
 
     return (
@@ -130,7 +128,7 @@ export const App = () => {
                         <Grid.Row centered style={{ marginTop: "40px" }}>
                             <Header textAlign="center">Daily increase charts</Header>
                         </Grid.Row>
-                        <CountryCharts country={isWorldTotal ? null : dataSourse.countryIso3.toString()} />
+                        <CountryCharts />
                     </>
                 )}
             </Grid>

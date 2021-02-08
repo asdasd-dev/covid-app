@@ -1,5 +1,5 @@
 import React, { createContext, useState } from "react";
-import { CountryData } from "./CountryStats";
+import { CountryData } from "../types";
 
 export const SelectedCountryContext = createContext<{
     selectedCountry: CountryData;

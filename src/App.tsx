@@ -9,6 +9,7 @@ import { CountryCharts } from "./components/CountryCharts";
 import { useMediaQuery } from "react-responsive";
 import { SelectedCountryContext } from "./context/SelectedCountry";
 import { WorldStatsContext } from "./context/WorldStats";
+import { CommonStats } from "./types";
 
 const Stat = styled.p`
     font-size: 2rem;
@@ -26,7 +27,7 @@ const Stat = styled.p`
     }
 `;
 
-export const App = () => {
+export const App: React.FC = () => {
     const theme = useContext(ThemeContext);
     const worldStats = useContext(WorldStatsContext);
     const { selectedCountry, setSelectedCountry } = useContext(SelectedCountryContext);
@@ -38,7 +39,7 @@ export const App = () => {
         selectedCountry && setIsWorldTotal(false);
     }, [selectedCountry]);
 
-    const dataSourse = isWorldTotal ? worldStats : selectedCountry;
+    const dataSourse: CommonStats = isWorldTotal ? worldStats : selectedCountry;
 
     function handleWorldTotalClick() {
         setIsWorldTotal(true);

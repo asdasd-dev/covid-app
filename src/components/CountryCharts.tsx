@@ -19,7 +19,7 @@ export const CountryCharts: React.FC = () => {
         axios
             .get(
                 `https://disease.sh/v3/covid-19/historical/${
-                    (selectedCountry && selectedCountry.countryIso3) || "all"
+                    (selectedCountry && selectedCountry.countryInfo.iso3) || "all"
                 }?lastdays=all`
             )
             .then((result) => !didCancel && setData(selectedCountry ? result.data.timeline : result.data));

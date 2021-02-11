@@ -8,10 +8,12 @@
         "allowJs": false,
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
-        "types": ["node"],
-        "typeRoots": ["node-modules/@types"],
-        "moduleResolution": "node"
+        "types": ["jest", "node"],
+        "moduleResolution": "node",
+        "baseUrl": "src",
+        "paths": {
+            "test-utils": ["./utils/test-utils"]
+        }
     },
-    "include": ["src/**/*", "index.d.ts"],
-    "exclude": ["**/node_modules", "**/dist", "**/build"]
+    "include": ["src/**/*", "index.d.ts", "__mocks__/**/*", "jestSetup.ts", "tests/**/*", "utils/**/*"]
 }

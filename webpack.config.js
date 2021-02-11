@@ -1,6 +1,7 @@
 const ESLintWebpackPlugin = require("eslint-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
 module.exports = (env) => {
     const isProd = !!env.production;
@@ -17,7 +18,7 @@ module.exports = (env) => {
             }),
             new ESLintWebpackPlugin({
                 extensions: ["js", "jsx", "ts", "tsx"],
-            }),
+            })
         ];
 
         isProd &&
@@ -42,6 +43,7 @@ module.exports = (env) => {
 
         resolve: {
             extensions: [".ts", ".tsx", ".js", ".jsx"],
+            plugins: [new TsconfigPathsPlugin()]
         },
 
         module: {

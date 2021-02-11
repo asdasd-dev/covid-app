@@ -20,5 +20,10 @@ module.exports = (api) => {
             ],
             "@babel/typescript",
         ],
+        env: {
+            test: {
+                plugins: ["@babel/plugin-transform-modules-commonjs"],
+            },
+        },
     };
 };

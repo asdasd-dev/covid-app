@@ -8,7 +8,7 @@ import { CountryStatsProvider } from "./context/CountryStats";
 import { WorldStatsProvider } from "./context/WorldStats";
 import { SelectedCountryProvider } from "./context/SelectedCountry";
 
-const theme = {
+export const theme = {
     recoveredColor: "#8ACA2B",
     deathsColor: "#696969",
     casesColor: "#AAA",

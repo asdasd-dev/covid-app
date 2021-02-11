@@ -66,7 +66,7 @@ export const App: React.FC = () => {
                         </Header>
                     </Grid.Column>
                     <Grid.Column textAlign="right">
-                        {isWorldTotal || (
+                        {isWorldTotal ? null : (
                             <Button size="large" onClick={handleWorldTotalClick}>
                                 World total
                             </Button>
@@ -135,10 +135,10 @@ export const App: React.FC = () => {
             </Grid>
             <div className="ui vertical footer segment" style={{ marginTop: 100 }}>
                 <Button as="a" labelPosition="left" href="https://github.com/asdasd-dev/covid-app">
-                    <Label as="a" basic pointing="right">
+                    <Label basic pointing="right">
                         <Icon size="big" name="github" style={{ margin: 0 }} />
                     </Label>
-                    <Button icon color={theme.secondaryColor}>
+                    <Button icon style={{ color: theme.secondaryColor }}>
                         asdasd-dev
                     </Button>
                 </Button>
